@@ -16,4 +16,7 @@ public interface ApiCall {
     @POST("/")
     Call<String> login(@Header("Content-Type") String content_type , @Field("password") String password);
 
+    @FormUrlEncoded
+    @POST("registerToken")
+    Call<Void> register(@Field("os") String os, @Field("deviceToken") String token);
 }

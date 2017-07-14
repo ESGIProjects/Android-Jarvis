@@ -1,9 +1,16 @@
 package com.example.kevin.jarvis.Services;
 
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.kevin.jarvis.Tools.ApiCall;
+import com.example.kevin.jarvis.Tools.RetrofitInstance;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by kevin on 13/04/2017.
@@ -42,6 +49,19 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
+        final String url = "http://jarvis-esgi.herokuapp.com/api/";
+        RetrofitInstance.getInstance(url).create(ApiCall.class).register("android",token).enqueue
+                (new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Log.d("RESPONSE : ", "" + response.code());
+                    }
 
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.d("ERROR RESPONSE : ", "" + t.getMessage());
+                        Toast.makeText(getApplicationContext(),"Token is not refreshed !",Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }
